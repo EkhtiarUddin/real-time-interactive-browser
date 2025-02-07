@@ -1,0 +1,15 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# Node.js (already handled by frontend/.gitignore)
+# node_modules/
+# .npm
+
+# React (already handled by frontend/.gitignore)
+# build/
+.DS_Store
