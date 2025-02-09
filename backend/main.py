@@ -160,12 +160,15 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                         await page.mouse.click(details["x"], details["y"])
                 elif action_type == "type":
                     if "selector" in details:
+                        # Type into a specific input field
                         await page.type(details["selector"], details["text"])
                     else:
+                        # Type into the focused element
                         await page.keyboard.type(details["text"])
                 elif action_type == "keypress":
                     await page.keyboard.press(details["key"])
 
+                # Capture and send screenshot
                 screenshot = await page.screenshot(type="jpeg", quality=70)
                 await websocket.send_bytes(screenshot)
 
