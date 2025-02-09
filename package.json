@@ -3,5 +3,8 @@
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
     "web-vitals": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.15"
   }
 }

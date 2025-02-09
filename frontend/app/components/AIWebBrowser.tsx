@@ -11,6 +11,7 @@ const AIWebBrowser = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [webSocket, setWebSocket] = useState<WebSocketService | null>(null);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const initializeSession = async () => {
     try {
@@ -61,12 +62,14 @@ const AIWebBrowser = () => {
         }
         return newUrl;
       });
+      setIsProcessing(false);
     } else {
       try {
         const message = JSON.parse(event.data);
         if (message.error) {
           setError(message.error);
         }
+        setIsProcessing(false);
       } catch (e) {
         console.error('Failed to parse message:', e);
       }
@@ -85,6 +88,7 @@ const AIWebBrowser = () => {
 
   const sendWebSocketMessage = useCallback(
     (message: any) => {
+      setIsProcessing(true);
       return webSocket?.send(message) ?? false;
     },
     [webSocket]
@@ -106,6 +110,7 @@ const AIWebBrowser = () => {
           sessionId={sessionId}
           sendMessage={sendWebSocketMessage}
           screenshotUrl={screenshotUrl}
+          isProcessing={isProcessing}
         />
       )}
     </Box>

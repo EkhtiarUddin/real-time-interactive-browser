@@ -12,19 +12,20 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.20",
+    "autoprefixer": "^10.4.14",
+    "lodash": "^4.17.21",
     "next": "14.0.3",
+    "postcss": "^8.4.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.3.0",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.21"
+    "tailwindcss": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
-    "typescript": "^5.3.3",
     "eslint": "^8.55.0",
-    "eslint-config-next": "14.0.3"
+    "eslint-config-next": "14.0.3",
+    "typescript": "^5.3.3"
   }
 }

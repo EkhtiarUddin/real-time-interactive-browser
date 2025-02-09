@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 class AIWebBrowser:
     def __init__(self):
         self.playwright: Playwright | None = None
@@ -92,6 +93,7 @@ class AIWebBrowser:
         except Exception as e:
             logger.error(f"Error during cleanup: {e}")
 
+
 app = FastAPI()
 
 # CORS middleware
@@ -160,19 +162,17 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                         await page.mouse.click(details["x"], details["y"])
                 elif action_type == "type":
                     if "selector" in details:
-                        # Type into a specific input field
                         await page.type(details["selector"], details["text"])
                     else:
-                        # Type into the focused element
                         await page.keyboard.type(details["text"])
                 elif action_type == "keypress":
                     await page.keyboard.press(details["key"])
 
-                # Capture and send screenshot
                 screenshot = await page.screenshot(type="jpeg", quality=70)
                 await websocket.send_bytes(screenshot)
 
             except WebSocketDisconnect:
+                logger.info(f"WebSocket disconnected for session: {session_id}")
                 break
             except Exception as e:
                 logger.error(f"WebSocket error: {e}")
@@ -181,8 +181,10 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     except Exception as e:
         logger.error(f"WebSocket connection error: {e}")
     finally:
-        await ai_browser.cleanup_session(session_id)
+        logger.info(f"WebSocket connection closed for session: {session_id}")
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
