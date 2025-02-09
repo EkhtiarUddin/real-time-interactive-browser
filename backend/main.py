@@ -10,15 +10,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from playwright.async_api import async_playwright, Playwright, Browser, Page
 
-# Load environment variables
 load_dotenv()
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize OpenAI client
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 class AIWebBrowser:
     def __init__(self):
         self.playwright: Playwright | None = None
@@ -94,8 +92,6 @@ class AIWebBrowser:
         except Exception as e:
             logger.error(f"Error during cleanup: {e}")
 
-
-# FastAPI app setup
 app = FastAPI()
 
 # CORS middleware
@@ -162,8 +158,14 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                         await page.click(details["selector"])
                     else:
                         await page.mouse.click(details["x"], details["y"])
+                elif action_type == "type":
+                    if "selector" in details:
+                        await page.type(details["selector"], details["text"])
+                    else:
+                        await page.keyboard.type(details["text"])
+                elif action_type == "keypress":
+                    await page.keyboard.press(details["key"])
 
-                # Capture and send screenshot
                 screenshot = await page.screenshot(type="jpeg", quality=70)
                 await websocket.send_bytes(screenshot)
 
@@ -176,9 +178,9 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     except Exception as e:
         logger.error(f"WebSocket connection error: {e}")
     finally:
-        await ai_browser.cleanup_session(session_id)
-
+        await ai_browser.cleanup_session(session_id) 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
