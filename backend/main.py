@@ -178,9 +178,8 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     except Exception as e:
         logger.error(f"WebSocket connection error: {e}")
     finally:
-        await ai_browser.cleanup_session(session_id) 
+        await ai_browser.cleanup_session(session_id)
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)
